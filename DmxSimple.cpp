@@ -32,7 +32,7 @@ void dmxMaxChannel(int);
 /* TIMER2 has a different register mapping on the ATmega8.
  * The modern chips (168, 328P, 1280) use identical mappings.
  */
-#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega1280__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
 #define TIMER2_INTERRUPT_ENABLE() TIMSK2 |= _BV(TOIE2)
 #define TIMER2_INTERRUPT_DISABLE() TIMSK2 &= ~_BV(TOIE2)
 #define ISR_NAME TIMER2_OVF_vect
