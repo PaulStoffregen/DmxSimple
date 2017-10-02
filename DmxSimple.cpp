@@ -14,7 +14,8 @@
 
 /** dmxBuffer contains a software copy of all the DMX channels.
   */
-volatile uint8_t dmxBuffer[DMX_SIZE];
+///volatile uint8_t dmxBuffer[DMX_SIZE];  //No huge static buffer anymore
+static uint8_t * dmxBuffer = NULL;
 static uint16_t dmxMax = 16; /* Default to sending the first 16 channels */
 static uint8_t dmxStarted = 0;
 static uint16_t dmxState = 0;
@@ -36,7 +37,7 @@ void dmxMaxChannel(int);
 #define TIMER2_INTERRUPT_ENABLE() TIMSK2 |= _BV(TOIE2)
 #define TIMER2_INTERRUPT_DISABLE() TIMSK2 &= ~_BV(TOIE2)
 #define ISR_NAME TIMER2_OVF_vect
-#define BITS_PER_TIMER_TICK (F_CPU / 31372)
+#define BITS_PER_TIMER_TICK (F_CPU / 31372 /2) ///// According cycle 1000us
 
 // older ATMEGA8 has slighly different timer2
 #elif defined(__AVR_ATmega8__)
@@ -101,6 +102,8 @@ void dmxBegin()
 #elif defined(CORE_TEENSY) && defined(__arm__)
   DMXtimer.begin(DMXinterrupt, 2000);
 #endif
+
+  TCCR2B = (1<<CS21) | (1<<CS20); // 32 prescaler - to minimize cycle from 2000 us to 1000 us (not all mux-es can wait so long////
   TIMER2_INTERRUPT_ENABLE();
 }
 
@@ -213,6 +216,7 @@ ISR(ISR_NAME,ISR_NOBLOCK) {
       uint8_t i;
       if (bitsLeft < 35) break;
       bitsLeft-=35;
+
       *dmxPort &= ~dmxBit;
       for (i=0; i<11; i++) delayMicroseconds(8);
       *dmxPort |= dmxBit;
@@ -237,17 +241,27 @@ ISR(ISR_NAME,ISR_NOBLOCK) {
 }
 
 void dmxWrite(int channel, uint8_t value) {
-  if (!dmxStarted) dmxBegin();
+  /*if (!dmxStarted) dmxBegin();
   if ((channel > 0) && (channel <= DMX_SIZE)) {
     if (value<0) value=0;
     if (value>255) value=255;
     dmxMax = max((unsigned)channel, dmxMax);
     dmxBuffer[channel-1] = value;
+  */
+  
+  if (!dmxStarted) dmxBegin();
+  if ((channel > 0) && (channel <= DMX_SIZE)) {
+    if (value<0) value=0;
+    if (value>255) value=255;
+
+    if (channel>dmxMax) dmxMaxChannel(channel);
+    if (dmxBuffer) dmxBuffer[channel-1] = value;
+
   }
 }
 
 void dmxMaxChannel(int channel) {
-  if (channel <=0) {
+  /*if (channel <=0) {
     // End DMX transmission
     dmxEnd();
     dmxMax = 0;
@@ -255,6 +269,30 @@ void dmxMaxChannel(int channel) {
     dmxMax = min(channel, DMX_SIZE);
     if (!dmxStarted) dmxBegin();
   }
+  */
+  if (channel <=0) 
+    {
+    // End DMX transmission
+    dmxEnd();
+    dmxMax = 0;
+    return;
+    } 
+    
+    else
+     
+    {
+    delete dmxBuffer;
+    dmxMax = min(channel, DMX_SIZE);
+    dmxBuffer=new uint8_t [dmxMax];
+     }
+    
+    if (!dmxBuffer) 
+    {
+    dmxMax=0;
+    return;
+    }
+    
+    if (!dmxStarted) dmxBegin();
 }
 
 
