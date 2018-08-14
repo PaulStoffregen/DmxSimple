@@ -10,41 +10,49 @@ DmxSimple does some fancy stuff behind the scenes, so there is no need to worry 
 
 ## Compatibility
 
-DmxSimple is compatible with all known Arduinos including the Mega. The following Arduinos are recommended, as they support both DmxSimple and the Tinker.it! DMX shield: Arduino Mega, Arduino Duemilanove 328, Arduino Duemilanove, Arduino Diecimila, Arduino Bluetooth, Arduino Pro (5V version only), Arduino NG, Arduino Serial. 
+DmxSimple is compatible with all known Arduinos including the Mega. The following Arduinos are recommended, as they support both DmxSimple and the Tinker.it! DMX shield: Arduino Mega, Arduino Duemilanove 328, Arduino Duemilanove, Arduino Diecimila, Arduino Bluetooth, Arduino Pro (5V version only), Arduino NG, Arduino Serial.
 
 ## Installation
 
-Download the archive. Extract to (arduino install)/hardware/libraries/DmxSimple . Restart Arduino so it recognises the library. 
+Download the archive. Extract to (arduino install)/hardware/libraries/DmxSimple . Restart Arduino so it recognises the library.
 
 ## Example code
 
 FadeUp
-SerialToDmx 
+SerialToDmx
 
-The example code is also built into the library. Open Arduino, and look under File > Sketchbook > Examples > Library-DmxSimple. 
+The example code is also built into the library. Open Arduino, and look under File > Sketchbook > Examples > Library-DmxSimple.
 
 ## Function calls
 
 ### DmxSimple.write(channel, value);
 
-Set DMX channel to value. Channel has the range 1 to 512 (128 on old Arduinos with a 168 or Mega 8). Value is in the range 0 (off) to 255 (full brightness). 
+Set DMX channel to value. Channel has the range 1 to 512 (128 on old Arduinos with a 168 or Mega 8). Value is in the range 0 (off) to 255 (full brightness).
 
 ### DmxSimple.maxChannel(channel);
 
-Set the number of DMX channels in the DMX system. The DMX system sends out channels in order, starting at 1. So it takes longer to send channels 1-512 than it does to send only channels 1-10. DmxSimple defaults to sending all channels, but by reducing this you can increase the lamp update rate for even smoother animation. Using DmxSimple.maxChannel(0) turns off the DMX system, so you can use pin 3 as a regular pin. It will revert to a DMX output next time you call DmxSimple.write() or DmxSimple.maxChannel(nonzero). 
+Set the number of DMX channels in the DMX system. The DMX system sends out channels in order, starting at 1. So it takes longer to send channels 1-512 than it does to send only channels 1-10. DmxSimple defaults to sending all channels, but by reducing this you can increase the lamp update rate for even smoother animation. Using DmxSimple.maxChannel(0) turns off the DMX system, so you can use pin 3 as a regular pin. It will revert to a DMX output next time you call DmxSimple.write() or DmxSimple.maxChannel(nonzero).
 
 ### DmxSimple.usePin(pin);
 
-Set the output pin. DmxSimple defaults to using pin 3, making it compatible with the Tinker.it! DMX shield. But if you use this function, you can output on any pin capable of digital output. 
+Set the output pin. DmxSimple defaults to using pin 3, making it compatible with the Tinker.it! DMX shield. But if you use this function, you can output on any pin capable of digital output.
+
+### DmxSimple.startDmx();
+
+Manually start dmx transmission. This must be called if the dmxBuffer is updated manually.
+
+### DmxSimple.getInternalBuffer();
+
+Get the internally used DMX channel data buffer. Small performance gains might be gained by directly modifying the buffer.
 
 ## DmxSimple community
 
-We now have a group on Google Groups. Get assistance starting with DMX, or show off your installations. 
+We now have a group on Google Groups. Get assistance starting with DMX, or show off your installations.
 
 ## Library limitations
 
-Timer 2 is used. Due to the small amount of RAM on 168 and Mega8 Arduinos, only the first 128 channels are supported. Arduinos with processor sockets can easily be upgraded to a 328 to control all 512 channels. 
+Timer 2 is used. Due to the small amount of RAM on 168 and Mega8 Arduinos, only the first 128 channels are supported. Arduinos with processor sockets can easily be upgraded to a 328 to control all 512 channels.
 
 ## Upgrade notes
 
-The original version 1 of DmxSimple used a file "DmxInterrupt.h". This has since been removed. To upgrade old sketches, remove the #include "DmxInterrupt.h" line. When upgrading the library from v1, delete all the old files before copying the contents of the new archive. 
+The original version 1 of DmxSimple used a file "DmxInterrupt.h". This has since been removed. To upgrade old sketches, remove the #include "DmxInterrupt.h" line. When upgrading the library from v1, delete all the old files before copying the contents of the new archive.

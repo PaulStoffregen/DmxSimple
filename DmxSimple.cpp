@@ -133,7 +133,7 @@ void dmxSendByte(volatile uint8_t value)
     "and __tmp_reg__,%[outMask]\n"
     "st %a[dmxPort],__tmp_reg__\n"
     "ldi %[bitCount],11\n" // 11 bit intervals per transmitted byte
-    "rjmp bitLoop%=\n"     // Delay 2 clock cycles. 
+    "rjmp bitLoop%=\n"     // Delay 2 clock cycles.
   "bitLoop%=:\n"\
     "ldi %[delCount],%[delCountVal]\n"
   "delLoop%=:\n"
@@ -189,7 +189,7 @@ void dmxSendByte(uint8_t value)
 
 /** DmxSimple interrupt routine
  * Transmit a chunk of DMX signal every timer overflow event.
- * 
+ *
  * The full DMX transmission takes too long, but some aspects of DMX timing
  * are flexible. This routine chunks the DMX signal, only sending as much as
  * it's time budget will allow.
@@ -231,7 +231,7 @@ ISR(ISR_NAME,ISR_NOBLOCK) {
       break;
     }
   }
-  
+
   // Enable interrupts for the next transmission chunk
   TIMER2_INTERRUPT_ENABLE();
 }
@@ -286,4 +286,19 @@ void DmxSimpleClass::write(int address, uint8_t value)
 {
 	dmxWrite(address, value);
 }
+
+/** Manually start dmx transmission
+ */
+void DmxSimpleClass::dmxStart()
+{
+  if (!dmxStarted) dmxBegin();
+}
+
+/** Get internally used dmx buffer
+ */
+uint8_t* DmxSimpleClass::getInternalBuffer()
+{
+  return dmxBuffer;
+}
+
 DmxSimpleClass DmxSimple;
