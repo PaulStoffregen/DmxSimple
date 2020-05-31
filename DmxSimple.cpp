@@ -19,7 +19,13 @@ static uint16_t dmxMax = 16; /* Default to sending the first 16 channels */
 static uint8_t dmxStarted = 0;
 static uint16_t dmxState = 0;
 
+#if defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)
+// Teensy 4.X has 32-bit ports
+static volatile uint32_t *dmxPort;
+#else
 static volatile uint8_t *dmxPort;
+#endif
+
 static uint8_t dmxBit = 0;
 static uint8_t dmxPin = 3; // Defaults to output on pin 3 to support Tinker.it! DMX shield
 
