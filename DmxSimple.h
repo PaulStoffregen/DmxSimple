@@ -21,6 +21,8 @@ class DmxSimpleClass
     void maxChannel(int);
     void write(int, uint8_t);
     void usePin(uint8_t);
+    void dmxStart();
+    uint8_t* getInternalBuffer();
 };
 extern DmxSimpleClass DmxSimple;
 

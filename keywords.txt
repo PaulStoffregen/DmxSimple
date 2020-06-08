@@ -15,7 +15,9 @@ DmxSimple	KEYWORD1
 write	KEYWORD2
 maxChannel	KEYWORD2
 usePin	KEYWORD2
-  
+dmxStart	KEYWORD2
+getInternalBuffer	KEYWORD2
+
 #######################################
 # Constants (LITERAL1)
 #######################################
