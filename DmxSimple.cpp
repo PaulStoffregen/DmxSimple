@@ -19,7 +19,7 @@ static uint16_t dmxMax = 16; /* Default to sending the first 16 channels */
 static uint8_t dmxStarted = 0;
 static uint16_t dmxState = 0;
 
-#if defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)
+#if defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY_MICROMOD) 
 // Teensy 4.X has 32-bit ports
 static volatile uint32_t *dmxPort;
 #else
